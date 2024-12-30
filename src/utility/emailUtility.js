@@ -4,6 +4,7 @@ import {EMAIL_HOST,EMAIL_USER,EMAIL_SECURITY,EMAIL_PORT,EMAIL_PASSWORD} from "..
 
 
 const sendEmail = async(EmailTo,EmailText,EmailSubject)=>{
+
 	let transporter = nodemailer.createTransport({
 		host: EMAIL_HOST,
 		port: EMAIL_PORT,

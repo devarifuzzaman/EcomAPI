@@ -2,6 +2,9 @@ import express from "express";
 const router = express.Router();
 import AuthMiddleware from "../middleware/AuthMiddleware.js";
 import * as ProductController from "../controllers/ProductController.js";
+import * as UserController from "../controllers/UserController.js";
+import * as WishlistController from "../controllers/WishListController.js";
+import * as CartListController from "../controllers/CartListController.js";
 
 
 //Api route for Product
@@ -17,21 +20,29 @@ router.get('/ProductListByRemark/:Remark',ProductController.ProductListByRemark)
 router.get('/ProductDetails/:ProductID',ProductController.ProductDetails)
 router.get('/ProductReviewList/:ProductID',ProductController.ProductReviewList)
 
-// router.post('/ProductListByFilter',ProductController.ProductListByFilter);
+router.post('/ProductListByFilter',ProductController.ProductListByFilter);
 
 
 
 
 // Users
-// router.post("/registration",UserController.Registration);
-// router.post("/login",UserController.Login)
-// router.get("/profileDetails",AuthMiddleware,UserController.ProfileDetails);
-// router.post("/profileUpdate",AuthMiddleware,UserController.UpdateProfile);
-// router.get("emilVerify",UserController.EmailVerification);
-// router.post("/codeVerify",UserController.CodeVerification);
-// router.post("/resetPassword",UserController.ResetPassword);
+router.get('/Login/:email',UserController.Login);
+router.get('/OtpVerify/:email/:otp',UserController.OtpVerification);
+router.get('/Logout',AuthMiddleware,UserController.LogOut);
+router.post('/CreateProfile',AuthMiddleware,UserController.CreateProfile);
+router.post('/UpdateProfile',AuthMiddleware,UserController.UpdateProfile);
+router.get('/ReadProfile',AuthMiddleware,UserController.ReadProfile);
 
+//Wish list
+router.post('/CreateWishlist/:productID',AuthMiddleware,WishlistController.CreateWishlist);
+router.post('/RemoveWishlist/:wishlistID',AuthMiddleware,WishlistController.RemoveWishlist);
+router.get('/Wishlist',AuthMiddleware,WishlistController.Wishlist);
 
+//Cart list
+router.post('/CreateCartList',AuthMiddleware,CartListController.SaveCartList);
+router.post('/RemoveCartList/:cartID',AuthMiddleware,CartListController.RemoveCartList);
+router.post('/UpdateCartList/:cartID',AuthMiddleware,CartListController.UpdateCartList);
+router.get('/CartList',AuthMiddleware,CartListController.CartList);
 
 
 
