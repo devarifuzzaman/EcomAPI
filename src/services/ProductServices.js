@@ -4,6 +4,7 @@ import BrandModel from "../models/BrandModel.js";
 import CategoryModel from "../models/CategoryModel.js";
 import ProductSliderModel from "../models/ProductSliderModel.js";
 import mongoose from "mongoose";
+import ReviewModel from "../models/ReviewModel.js";
 
 const ObjectId=mongoose.Types.ObjectId;
 
@@ -231,50 +232,6 @@ export const ListByKeywordServices=async(req)=>{
 
 
 }
-
-export const ProductReviewListServices=async(req)=>{
-	try {
-		let ProductID= new ObjectId(req.params.ProductID);
-
-		let MatchStage={$match:{productID:ProductID}}
-
-		let JoinWithProfileStage= {$lookup:{from:"customerProfiles",localField:"userID",foreignField:"userID",as:"profile"}};
-		let UnwindProfileStage={$unwind:"$profile"}
-		let ProjectionStage= {$project: {'des': 1, 'rating': 1, 'profile.customerName': 1}}
-
-		let data= await  ProductReviewModel.aggregate([
-			MatchStage,
-			JoinWithProfileStage,
-			UnwindProfileStage,
-			ProjectionStage
-		])
-
-		return {status: "success", data: data};
-	} catch (err) {
-		return {status: "fail", data: err.toString()};
-	}
-
-}
-
-
-export const CreateReviewServices=async(req)=>{
-	try{
-
-		let reqBody=req.body;
-		reqBody.userID=req.headers.user_id;
-		let data=await ProductReviewModel.create(reqBody)
-		return {status:"success",data:data}
-	}
-	catch (e) {
-		return {status:"fail",data:e.toString()}
-	}
-}
-
-
-
-
-
-
 export const ListByFilterServices=async(req)=>{
 	try {
 
@@ -301,7 +258,7 @@ export const ListByFilterServices=async(req)=>{
 			PriceMatchConditions['numericPrice'] = { ...(PriceMatchConditions['numericPrice'] || {}), $lte: priceMax };
 		}
 		let PriceMatchStage = { $match: PriceMatchConditions };
-		
+
 
 		let JoinWithBrandStage= {$lookup:{from:"brands",localField:"brandID",foreignField:"_id",as:"brand"}};
 		let JoinWithCategoryStage={$lookup:{from:"categories",localField:"categoryID",foreignField:"_id",as:"category"}};
@@ -322,3 +279,55 @@ export const ListByFilterServices=async(req)=>{
 		return {status:"fail",data:err.toString()}
 	}
 }
+
+
+export const CreateReviewServices=async(req)=>{
+	try{
+		let user_id = req.headers.user_id;
+		let reqBody = req.body;
+		let data = await ReviewModel.create({
+			productID:reqBody['productID'],
+			userID:user_id,
+			des:reqBody['des'],
+			rating:reqBody['rating']
+		})
+
+		return {status: "success", data: data};
+	}
+	catch (e) {
+		return {status:"fail",data:e.toString()}
+	}
+}
+
+
+export const ProductReviewListServices=async(req)=>{
+	try {
+		let ProductID= new ObjectId(req.params.ProductID);
+
+		let MatchStage={$match:{productID:ProductID}}
+
+		let JoinWithProfileStage= {$lookup:{from:"profiles",localField:"userID",foreignField:"userID",as:"profile"}};
+		let UnwindProfileStage={$unwind:"$profile"}
+		let ProjectionStage= {$project: {'des': 1, 'rating': 1, 'profile.cus_name': 1}}
+
+		let data= await  ProductReviewModel.aggregate([
+			MatchStage,
+			JoinWithProfileStage,
+			UnwindProfileStage,
+			ProjectionStage
+		])
+
+		if (data.length===0){
+			return {status: "success", data: "No Product Review found"};
+		}else {
+			return {status: "success", data: data};
+		}
+	} catch (err) {
+		return {status: "fail", data: err.toString()};
+	}
+
+}
+
+
+
+

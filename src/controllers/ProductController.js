@@ -67,11 +67,6 @@ export const ProductListByKeyword=async(req,res)=>{
 	return res.status(200).json(result);
 }
 
-export const ProductReviewList=async(req,res)=>{
-	let result= await ProductReviewListServices(req);
-	return res.status(200).json(result);
-}
-
 export const ProductListByFilter=async(req,res)=>{
 	let result= await ListByFilterServices(req);
 	return res.status(200).json(result);
@@ -82,3 +77,7 @@ export const CreateProductReview=async(req,res)=>{
 	return res.status(200).json(result);
 }
 
+export const ProductReviewList=async(req,res)=>{
+	let result= await ProductReviewListServices(req);
+	return res.status(200).json(result);
+}

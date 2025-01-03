@@ -37,8 +37,11 @@ export const CartListService = async (req) => {
 			projectionStage
 		])
 
-
-		return {status:"success",data:data}
+		if(data.length===0){
+			return {status:"success",data:"Cart List is Empty"}
+		}else {
+			return {status:"success",data:data}
+		}
 
 	}catch (e) {
 		return {status:"fail",message:"Something Went Wrong !"}

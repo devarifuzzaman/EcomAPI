@@ -19,7 +19,7 @@ const sendEmail = async(EmailTo,EmailText,EmailSubject)=>{
 	})
 
 	let mailOptions = {
-		from: 'Ecommerce Back End API <mdarifuzzamanshakil12@gmail.com>',
+		from: 'Ecommerce Back End API <info@teamrabbil.com>',
 		to: EmailTo,
 		subject:EmailSubject,
 		text:EmailText

@@ -5,20 +5,22 @@ import * as ProductController from "../controllers/ProductController.js";
 import * as UserController from "../controllers/UserController.js";
 import * as WishlistController from "../controllers/WishListController.js";
 import * as CartListController from "../controllers/CartListController.js";
+import * as InvoiceController from "../controllers/InvoiceController.js";
+import * as FeatureController from "../controllers/FeaturesController.js";
 
 
 //Api route for Product
-router.get('/ProductBrandList',ProductController.ProductBrandList)
-router.get('/ProductCategoryList',ProductController.ProductCategoryList)
-router.get('/ProductList',ProductController.ProductList)
-router.get('/ProductSliderList',ProductController.ProductSliderList)
-router.get('/ProductListByBrand/:BrandID',ProductController.ProductListByBrand)
-router.get('/ProductListByCategory/:CategoryID',ProductController.ProductListByCategory)
-router.get('/ProductListBySimilar/:CategoryID',ProductController.ProductListBySimilar)
-router.get('/ProductListByKeyword/:Keyword',ProductController.ProductListByKeyword)
-router.get('/ProductListByRemark/:Remark',ProductController.ProductListByRemark)
-router.get('/ProductDetails/:ProductID',ProductController.ProductDetails)
-router.get('/ProductReviewList/:ProductID',ProductController.ProductReviewList)
+router.get('/ProductBrandList',ProductController.ProductBrandList);
+router.get('/ProductCategoryList',ProductController.ProductCategoryList);
+router.get('/ProductList',ProductController.ProductList);
+router.get('/ProductSliderList',ProductController.ProductSliderList);
+router.get('/ProductListByBrand/:BrandID',ProductController.ProductListByBrand);
+router.get('/ProductListByCategory/:CategoryID',ProductController.ProductListByCategory);
+router.get('/ProductListBySimilar/:CategoryID',ProductController.ProductListBySimilar);
+router.get('/ProductListByKeyword/:Keyword',ProductController.ProductListByKeyword);
+router.get('/ProductListByRemark/:Remark',ProductController.ProductListByRemark);
+router.get('/ProductDetails/:ProductID',ProductController.ProductDetails);
+
 
 router.post('/ProductListByFilter',ProductController.ProductListByFilter);
 
@@ -44,6 +46,21 @@ router.post('/RemoveCartList/:cartID',AuthMiddleware,CartListController.RemoveCa
 router.post('/UpdateCartList/:cartID',AuthMiddleware,CartListController.UpdateCartList);
 router.get('/CartList',AuthMiddleware,CartListController.CartList);
 
+//Invoice ssl-commerce
+router.get("/createInvoice",AuthMiddleware,InvoiceController.CreateInvoice);
+router.get("/InvoiceList",AuthMiddleware,InvoiceController.InvoiceList);
+router.get("/InvoiceProductList/:invoice_id",AuthMiddleware,InvoiceController.InvoiceProductList);
 
+router.post('/PaymentSuccess/:trxID',InvoiceController.PaymentSuccess);
+router.post('/PaymentCancel/:trxID',InvoiceController.PaymentCancel);
+router.post('/PaymentFail/:trxID',InvoiceController.PaymentFail);
+router.post('/PaymentIPN/:trxID',InvoiceController.PaymentIPN);
+
+//Features
+router.get("/featuresList",FeatureController.FeatureList);
+
+//Create Review
+router.post("/createReview",AuthMiddleware,ProductController.CreateProductReview);
+router.get('/ProductReviewList/:ProductID',ProductController.ProductReviewList);
 
 export default router;
